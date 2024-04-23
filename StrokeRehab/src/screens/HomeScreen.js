@@ -1,21 +1,49 @@
-import React, { useState } from 'react';
-import { View, Text, Button } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
-  const [selectedDate, setSelectedDate] = useState('');
-
   return (
-    <View style={{ flex: 1 }}>
-      <Calendar
-        onDayPress={(day) => {
-          setSelectedDate(day.dateString);
-          navigation.navigate('AppointmentDetails', { date: day.dateString });
-        }}
-      />
-      <Text>Selected Date: {selectedDate}</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome to Your Health Hub</Text>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Food Planner"
+          onPress={() => navigation.navigate('FoodPlanner')}
+        />
+        <Button
+          title="Medical Tracker"
+          onPress={() => navigation.navigate('MedicalTracker')}
+        />
+        <Button
+          title="Exercise Planner"
+          onPress={() => navigation.navigate('ExercisePlanner')}
+        />
+        <Button
+          title="More Resources"
+          onPress={() => navigation.navigate('WebResources')}
+        />
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    width: '100%',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+  }
+});
 
 export default HomeScreen;
