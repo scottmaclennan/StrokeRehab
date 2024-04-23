@@ -19,7 +19,15 @@ const HomeScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('ExercisePlanner')}
         />
         <Button
-          title="More Resources"
+          title="Quiting smoking"
+          onPress={() => navigation.navigate('WebResources')}
+        />
+          <Button
+          title="Dealing with Alcohol"
+          onPress={() => navigation.navigate('WebResources')}
+        />
+          <Button
+          title="Dealing with stress"
           onPress={() => navigation.navigate('WebResources')}
         />
       </View>
