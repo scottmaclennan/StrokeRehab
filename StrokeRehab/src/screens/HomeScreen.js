@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
         />
         <Button
           title="Medical Tracker"
-          onPress={() => navigation.navigate('MedicalTracker')}
+          onPress={() => navigation.navigate('MedicalPlanner')}
         />
         <Button
           title="Exercise Planner"

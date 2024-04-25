@@ -15,10 +15,10 @@ function AppNavigator() {
   return (
     <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="MealPlan" component={MealPlanScreen} />
+      <Stack.Screen name="FoodPlanner" component={MealPlanScreen} />
       <Stack.Screen name="AppointmentDetailScreen" component={AppointmentDetailScreen} />
-      <Stack.Screen name="ExerciseScreen" component={ExerciseScreen} />
-      <Stack.Screen name="MedicationScreen" component={MedicationScreen} />
+      <Stack.Screen name="ExercisePlanner" component={ExerciseScreen} />
+      <Stack.Screen name="MedicationPlanner" component={MedicationScreen} />
       <Stack.Screen name="SymptomDairyScreen" component={SymptomDairyScreen} />
       <Stack.Screen name="GroceryList" component={GroceryListScreen} />
     </Stack.Navigator>
