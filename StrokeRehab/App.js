@@ -1,8 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native'; // Import NavigationContainer
 import AppNavigator from '../src/navigation/AppNavigator';
 
 export default function App() {
-  return <AppNavigator />;
+  return (
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({
