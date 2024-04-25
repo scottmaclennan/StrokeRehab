@@ -1,0 +1,83 @@
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
+
+// Sample data for exercises
+const exercises = [
+  { id: '1', title: 'Push-ups', description: 'Do 20 push-ups.' },
+  { id: '2', title: 'Sit-ups', description: 'Do 30 sit-ups.' },
+  { id: '3', title: 'Squats', description: 'Do 15 squats.' },
+  { id: '4', title: 'Plank', description: 'Hold a plank for 60 seconds.' }
+];
+
+const ExerciseScreen = () => {
+  const [seconds, setSeconds] = useState(0);
+  const timerRef = useRef(null);
+
+  const startTimer = () => {
+    timerRef.current = setInterval(() => {
+      setSeconds(prev => prev + 1);
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const resetTimer = () => {
+    stopTimer();
+    setSeconds(0);
+  };
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={exercises}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.itemContainer}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.description}>{item.description}</Text>
+          </TouchableOpacity>
+        )}
+      />
+      <View style={styles.timerContainer}>
+        <Text style={styles.timerText}>{`Timer: ${seconds} Seconds`}</Text>
+        <Button title="Start" onPress={startTimer} />
+        <Button title="Stop" onPress={stopTimer} />
+        <Button title="Reset" onPress={resetTimer} />
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 20,
+  },
+  itemContainer: {
+    padding: 20,
+    marginVertical: 5,
+    backgroundColor: '#f0f0f0',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  description: {
+    fontSize: 16,
+  },
+  timerContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  timerText: {
+    fontSize: 20,
+    marginBottom: 10,
+  },
+});
+
+export default ExerciseScreen;
