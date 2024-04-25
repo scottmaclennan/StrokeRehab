@@ -4,7 +4,7 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Your Stroke Rehab</Text>
+      <Text style={styles.title}>Welcome to Stroke Rehab</Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Food Planner"
@@ -22,12 +22,12 @@ const HomeScreen = ({ navigation }) => {
           title="Quiting smoking"
           onPress={() => navigation.navigate('WebResources')}
         />
-          <Button
-          title="Dealing with Alcohol"
+        <Button
+          title="Quiting Drinking"
           onPress={() => navigation.navigate('WebResources')}
         />
-          <Button
-          title="Dealing with stress"
+        <Button
+          title="Dealing with Stress"
           onPress={() => navigation.navigate('WebResources')}
         />
       </View>
