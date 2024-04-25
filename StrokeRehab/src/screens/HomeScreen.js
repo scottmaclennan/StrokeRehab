@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   return (
+    <ImageBackground source={require('../assets/Images/StrokeRehab.jpeg')}>
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to Stroke Rehab</Text>
       <View style={styles.buttonContainer}>
@@ -32,6 +33,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
     </View>
+    </ImageBackground>
   );
 };
 
