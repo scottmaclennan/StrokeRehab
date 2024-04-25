@@ -4,7 +4,7 @@ import HomeScreen from '../screens/HomeScreen';
 import MealPlanScreen from '../screens/MealPlanScreen';
 import GroceryListScreen from '../screens/GroceryListScreen';
 import AppointmentDetailScreen from '../screens/AppointmentDetailScreen';
-import ExerciseScreen from '../screens/AppointmentDetailScreen';
+import ExerciseScreen from '../screens/ExerciseScreen';
 import MedicationScreen from '../screens/MedicationScreen';
 import SymptomDairyScreen from '../screens/SymptomDairyScreen';
 
