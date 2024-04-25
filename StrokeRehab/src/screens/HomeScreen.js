@@ -4,8 +4,7 @@ import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../assets/Images/StrokeRehab.jpeg')} resizeMode="cover" 
-      style={styles.image} >
+      <ImageBackground source={require('../assets/Images/StrokeRehab.jpeg')} resizeMode="cover" >
       <Text style={styles.title}>Welcome to </Text>
       <View style={styles.buttonContainer}>
         <Button

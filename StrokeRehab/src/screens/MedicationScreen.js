@@ -6,7 +6,6 @@ function MedicationScreen() {
     <View style={styles.container}>
       <Text>Medication Reminder</Text>
       <Button title="Add Medication" onPress={() => {/* Logic to add medication */}} />
-      // Optionally list medications here
     </View>
   );
 }
