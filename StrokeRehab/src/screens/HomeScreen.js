@@ -4,7 +4,10 @@ import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../assets/Images/StrokeRehab.jpeg')} resizeMode="cover" >
+      <ImageBackground 
+        source={require('../assets/Images/StrokeRehab.jpeg')}
+        style={styles.image}
+      >
       <Text style={styles.title}>Welcome to </Text>
       <View style={styles.buttonContainer}>
         <Button
@@ -51,7 +54,10 @@ const styles = StyleSheet.create({
   },  
   image: {
     flex: 1,
-    justifyContent: 'center',
+    resizeMode: 'cover', 
+    justifyContent: 'center', 
+    width: '100%', 
+    height: '100%' 
   },
   buttonContainer: {
     width: '100%',
