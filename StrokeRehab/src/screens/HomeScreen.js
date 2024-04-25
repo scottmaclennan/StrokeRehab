@@ -3,9 +3,10 @@ import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <ImageBackground source={require('../assets/Images/StrokeRehab.jpeg')}>
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Stroke Rehab</Text>
+      <ImageBackground source={require('../assets/Images/StrokeRehab.jpeg')} resizeMode="cover" 
+      style={styles.image} >
+      <Text style={styles.title}>Welcome to </Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Food Planner"
@@ -32,9 +33,9 @@ const HomeScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('WebResources')}
         />
       </View>
-    </View>
-    </ImageBackground>
-  );
+      </ImageBackground>
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -48,10 +49,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },  
+  image: {
+    flex: 1,
+    justifyContent: 'center',
   },
   buttonContainer: {
     width: '100%',
-    justifyContent: 'space-around',
+    justifyContent: 'Center',
+    alignItems:'center',
     paddingHorizontal: 20,
   }
 });
