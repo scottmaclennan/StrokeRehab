@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    justifyContent: 'Center',
-    alignItems:'center',
+    justifyContent: 'center', 
+    alignItems: 'center',
     paddingHorizontal: 20,
   }
 });
