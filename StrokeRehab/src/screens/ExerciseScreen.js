@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
 const initialExercises = [
@@ -13,17 +13,17 @@ const ExerciseScreen = () => {
   const [newDescription, setNewDescription] = useState('');
 
   useEffect(() => {
-    scheduleDailyReminder(); // Schedule daily exercise reminder when component mounts
+    scheduleDailyReminder();
   }, []);
 
   const scheduleDailyReminder = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Daily Exercise Reminder',
-        body: 'Don\'t forget to complete your daily exercises!',
+        body: 'Don’t forget to complete your daily exercises!',
       },
       trigger: {
-        hour: 8, // Set the reminder to 8:00 AM
+        hour: 8,
         minute: 0,
         repeats: true,
       },
@@ -32,7 +32,7 @@ const ExerciseScreen = () => {
 
   const addExercise = () => {
     if (newTitle && newDescription) {
-      const newId = (Math.max(...exercises.map(ex => parseInt(ex.id))) + 1).toString(); // Ensure unique ID
+      const newId = (Math.max(...exercises.map(ex => parseInt(ex.id, 10))) + 1).toString();
       const newExercise = { id: newId, title: newTitle, description: newDescription, seconds: 0, timerOn: false, intervalId: null };
       setExercises([...exercises, newExercise]);
       setNewTitle('');
@@ -42,38 +42,29 @@ const ExerciseScreen = () => {
     }
   };
 
-  const startTimer = (id) => {
-    setExercises(exs => exs.map(ex => {
-      if (ex.id === id && !ex.timerOn) {
-        const intervalId = setInterval(() => {
-          setExercises(currentExs => currentExs.map(innerEx => {
-            if (innerEx.id === id) {
-              return { ...innerEx, seconds: innerEx.seconds + 1 };
-            }
-            return innerEx;
-          }));
-        }, 1000);
-        return { ...ex, timerOn: true, intervalId };
-      }
-      return ex;
-    }));
-  };
-
-  const stopTimer = (id) => {
-    setExercises(exs => exs.map(ex => {
-      if (ex.id === id && ex.timerOn) {
-        clearInterval(ex.intervalId);
-        return { ...ex, timerOn: false, intervalId: null };
-      }
-      return ex;
-    }));
-  };
-
-  const resetTimer = (id) => {
-    stopTimer(id);
+  const handleTimer = (id, command) => {
     setExercises(exs => exs.map(ex => {
       if (ex.id === id) {
-        return { ...ex, seconds: 0 };
+        switch (command) {
+          case 'start':
+            const intervalId = setInterval(() => {
+              setExercises(currentExs => currentExs.map(innerEx => {
+                if (innerEx.id === id) {
+                  return { ...innerEx, seconds: innerEx.seconds + 1 };
+                }
+                return innerEx;
+              }));
+            }, 1000);
+            return { ...ex, timerOn: true, intervalId };
+          case 'stop':
+            clearInterval(ex.intervalId);
+            return { ...ex, timerOn: false, intervalId: null };
+          case 'reset':
+            clearInterval(ex.intervalId);
+            return { ...ex, seconds: 0, timerOn: false, intervalId: null };
+          default:
+            return ex;
+        }
       }
       return ex;
     }));
@@ -85,16 +76,18 @@ const ExerciseScreen = () => {
       <Text style={styles.description}>{item.description}</Text>
       <Text style={styles.timerText}>Timer: {item.seconds} Seconds</Text>
       <View style={styles.buttonContainer}>
-        {!item.timerOn && <Button title="Start" onPress={() => startTimer(item.id)} />}
-        {item.timerOn && <Button title="Stop" onPress={() => stopTimer(item.id)} />}
-        <Button title="Reset" onPress={() => resetTimer(item.id)} />
+        <TouchableOpacity style={item.timerOn ? styles.buttonStop : styles.buttonStart} onPress={() => handleTimer(item.id, item.timerOn ? 'stop' : 'start')}>
+          <Text style={styles.buttonText}>{item.timerOn ? 'Stop' : 'Start'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonReset} onPress={() => handleTimer(item.id, 'reset')}>
+          <Text style={styles.buttonText}>Reset</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      {/* Input fields for adding new exercises */}
       <TextInput
         style={styles.input}
         onChangeText={setNewTitle}
@@ -107,9 +100,9 @@ const ExerciseScreen = () => {
         value={newDescription}
         placeholder="New Exercise Description"
       />
-      <Button title="Add Exercise" onPress={addExercise} />
-
-      {/* List of exercises */}
+      <TouchableOpacity style={styles.addButton} onPress={addExercise}>
+        <Text style={styles.buttonText}>Add Exercise</Text>
+      </TouchableOpacity>
       <FlatList
         data={exercises}
         keyExtractor={item => item.id}
@@ -124,35 +117,71 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 10,
+    backgroundColor: '#f9f9f9',
   },
   itemContainer: {
     padding: 20,
-    marginVertical: 5,
-    backgroundColor: '#f0f0f0',
+    marginVertical: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 4,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#cccccc',
     borderWidth: 1,
     marginBottom: 10,
-    paddingHorizontal: 10,
-    fontSize: 16, // Increase font size for better readability
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    backgroundColor: '#ffffff',
+    fontSize: 16,
   },
   title: {
-    fontSize: 20, // Increase font size for better readability
+    fontSize: 22,
     fontWeight: 'bold',
+    marginBottom: 5,
   },
   description: {
-    fontSize: 18, // Increase font size for better readability
+    fontSize: 18,
   },
   timerText: {
-    fontSize: 18, // Increase font size for better readability
-    marginVertical: 5,
+    fontSize: 18,
+    marginVertical: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
+    justifyContent: 'space-around',
+  },
+  buttonStart: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#4CAF50',
+  },
+  buttonStop: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#f44336',
+  },
+  buttonReset: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#ffeb3b',
+  },
+  addButton: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#2196f3',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

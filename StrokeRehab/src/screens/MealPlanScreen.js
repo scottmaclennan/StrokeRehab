@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 
+
 const initialMeals = [
   { id: '1', day: 'Monday', meals: { breakfast: 'Oatmeal', lunch: 'Chicken Salad', dinner: 'Chicken and Rice' } },
   { id: '2', day: 'Tuesday', meals: { breakfast: 'Bagel', lunch: 'Beef Sandwich', dinner: 'Beef Stir Fry' } },
@@ -63,9 +64,7 @@ const MealPlanScreen = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
@@ -89,34 +88,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#f7f7f7',
   },
   itemContainer: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc'
+    borderBottomColor: '#e0e0e0'
   },
   day: {
-    fontSize: 20, // Increase font size for better readability
-    fontWeight: 'bold'
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
   },
   meal: {
-    fontSize: 18, // Increase font size for better readability
+    fontSize: 18,
+    color: '#666',
   },
   mealItem: {
     flexDirection: 'row',
-    paddingVertical: 5,
+    paddingVertical: 10,
+    backgroundColor: '#fff',
+    marginBottom: 5,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
   mealType: {
     fontWeight: 'bold',
     marginRight: 5,
-    fontSize: 18, // Increase font size for better readability
+    fontSize: 18,
+    color: '#333',
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', // semi-transparent background
   },
   modalView: {
     margin: 20,
@@ -137,9 +147,11 @@ const styles = StyleSheet.create({
     height: 40,
     marginBottom: 20,
     borderWidth: 1,
+    borderColor: '#ccc',
     padding: 10,
-    width: 200,
-    fontSize: 18, 
+    width: 250,
+    fontSize: 18,
+    backgroundColor: '#fff',
   },
 });
 
