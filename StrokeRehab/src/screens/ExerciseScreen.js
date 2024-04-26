@@ -13,8 +13,20 @@ const ExerciseScreen = () => {
   const [newDescription, setNewDescription] = useState('');
 
   useEffect(() => {
+    fetchExercises();
     scheduleDailyReminder();
   }, []);
+
+  const fetchExercises = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/exercises');
+      const data = await response.json();
+      setExercises(data);
+    } catch (error) {
+      console.error('Failed to fetch exercises:', error);
+      Alert.alert('Error', 'Failed to fetch exercises from server');
+    }
+  };
 
   const scheduleDailyReminder = async () => {
     await Notifications.scheduleNotificationAsync({
