@@ -1,7 +1,7 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 
-const meals = [
+const initialMeals = [
   { id: '1', day: 'Monday', meals: { breakfast: 'Oatmeal', lunch: 'Chicken Salad', dinner: 'Chicken and Rice' } },
   { id: '2', day: 'Tuesday', meals: { breakfast: 'Bagel', lunch: 'Beef Sandwich', dinner: 'Beef Stir Fry' } },
   { id: '3', day: 'Wednesday', meals: { breakfast: 'Fruit Salad', lunch: 'Tomato Soup', dinner: 'Vegetable Pasta' } },
@@ -12,26 +12,26 @@ const meals = [
 ];
 
 const MealPlanScreen = () => {
-  const editMeal = (day, type, currentMeal) => {
-    Alert.prompt(
-      `Edit ${type}`,
-      `Current meal for ${day}: ${currentMeal}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'OK', onPress: (newMeal) => updateMeal(day, type, newMeal) },
-      ],
-      'plain-text',
-      currentMeal
-    );
+  const [meals, setMeals] = useState(initialMeals);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentMeal, setCurrentMeal] = useState({});
+  const [editedMeal, setEditedMeal] = useState('');
+
+  const openEditModal = (day, type, meal) => {
+    setCurrentMeal({ day, type, meal });
+    setEditedMeal(meal);
+    setModalVisible(true);
   };
 
-  const updateMeal = (day, type, newMeal) => {
-    const mealIndex = meals.findIndex(meal => meal.day === day);
-    if (mealIndex !== -1) {
-      const updatedMeals = [...meals];
-      updatedMeals[mealIndex].meals[type] = newMeal;
-      console.log(updatedMeals); // In practice, you'd want to use a state to handle this update
-    }
+  const handleEditMeal = () => {
+    const updatedMeals = meals.map(meal => {
+      if (meal.day === currentMeal.day) {
+        return { ...meal, meals: { ...meal.meals, [currentMeal.type]: editedMeal } };
+      }
+      return meal;
+    });
+    setMeals(updatedMeals);
+    setModalVisible(false);
   };
 
   return (
@@ -46,7 +46,7 @@ const MealPlanScreen = () => {
               <TouchableOpacity
                 key={mealType}
                 style={styles.mealItem}
-                onPress={() => editMeal(item.day, mealType, item.meals[mealType])}
+                onPress={() => openEditModal(item.day, mealType, item.meals[mealType])}
               >
                 <Text style={styles.mealType}>{mealType}: </Text>
                 <Text style={styles.meal}>{item.meals[mealType]}</Text>
@@ -55,6 +55,26 @@ const MealPlanScreen = () => {
           </View>
         )}
       />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TextInput
+              style={styles.input}
+              onChangeText={setEditedMeal}
+              value={editedMeal}
+            />
+            <Button title="Save Changes" onPress={handleEditMeal} />
+            <Button title="Cancel" onPress={() => setModalVisible(false)} color="#FF6347" />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -84,7 +104,35 @@ const styles = StyleSheet.create({
   mealType: {
     fontWeight: 'bold',
     marginRight: 5,
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  input: {
+    height: 40,
+    marginBottom: 20,
+    borderWidth: 1,
+    padding: 10,
+    width: 200,
+  },
 });
 
 export default MealPlanScreen;
