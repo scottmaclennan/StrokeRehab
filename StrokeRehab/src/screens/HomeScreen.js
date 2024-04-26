@@ -8,7 +8,7 @@ const HomeScreen = ({ navigation }) => {
         source={require('../assets/Images/StrokeRehab.jpeg')}
         style={styles.image}
       >
-      <Text style={styles.title}>Welcome to </Text>
+      <Text style={styles.title}>Welcome to StrokeRehab</Text>
       <View style={styles.buttonContainer}>
         <Button
           title="Food Planner"
@@ -21,18 +21,6 @@ const HomeScreen = ({ navigation }) => {
         <Button
           title="Exercise Planner"
           onPress={() => navigation.navigate('ExercisePlanner')}
-        />
-        <Button
-          title="Quiting smoking"
-          onPress={() => navigation.navigate('WebResources')}
-        />
-        <Button
-          title="Quiting Drinking"
-          onPress={() => navigation.navigate('WebResources')}
-        />
-        <Button
-          title="Dealing with Stress"
-          onPress={() => navigation.navigate('WebResources')}
         />
       </View>
       </ImageBackground>
