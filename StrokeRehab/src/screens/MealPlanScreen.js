@@ -1,16 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
-
-
-const initialMeals = [
-  { id: '1', day: 'Monday', meals: { breakfast: 'Oatmeal', lunch: 'Chicken Salad', dinner: 'Chicken and Rice' } },
-  { id: '2', day: 'Tuesday', meals: { breakfast: 'Bagel', lunch: 'Beef Sandwich', dinner: 'Beef Stir Fry' } },
-  { id: '3', day: 'Wednesday', meals: { breakfast: 'Fruit Salad', lunch: 'Tomato Soup', dinner: 'Vegetable Pasta' } },
-  { id: '4', day: 'Thursday', meals: { breakfast: 'Pancakes', lunch: 'Fish Salad', dinner: 'Fish and Chips' } },
-  { id: '5', day: 'Friday', meals: { breakfast: 'Yogurt', lunch: 'Pizza Slice', dinner: 'Pizza' } },
-  { id: '6', day: 'Saturday', meals: { breakfast: 'Smoothie', lunch: 'Chicken Wrap', dinner: 'Salad' } },
-  { id: '7', day: 'Sunday', meals: { breakfast: 'French Toast', lunch: 'Grilled Cheese', dinner: 'Soup' } }
-];
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MealPlanScreen = () => {
   const [meals, setMeals] = useState(initialMeals);
@@ -35,9 +25,42 @@ const MealPlanScreen = () => {
     setModalVisible(false);
   };
 
-  const saveMealPlan = () => {
-    alert('Meal plan saved!');
+
+  const saveMealPlan = async () => {
+    try {
+      const response = await fetch('http://yourserver.com/saveMealPlan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(meals)
+      });
+      const jsonResponse = await response.json();
+      alert(jsonResponse.status);
+    } catch (error) {
+      alert('Failed to save the meal plan');
+      console.error('Error saving meal plan:', error);
+    }
   };
+  
+  const loadMealPlan = async () => {
+    try {
+      const savedMeals = await AsyncStorage.getItem('meals');
+      if (savedMeals !== null) {
+        setMeals(JSON.parse(savedMeals));
+      }
+    } catch (error) {
+      alert('Failed to load the meal plan');
+      console.error('Error loading meal plan:', error);
+    }
+  };
+  
+  useEffect(() => {
+    loadMealPlan();
+    scheduleDailyReminder();
+  }, []);
+  
+
 
   return (
     <View style={styles.container}>
