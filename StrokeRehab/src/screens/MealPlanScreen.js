@@ -43,7 +43,7 @@ const MealPlanScreen = () => {
   // Function to save the updated meal plan
   const saveMealPlan = async () => {
     try {
-      const response = await fetch('http://yourserver.com/saveMealPlan', {
+      const response = await fetch('http://localhost:3000/medications', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
