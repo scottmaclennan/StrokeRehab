@@ -1,17 +1,39 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
 const meals = [
-  { id: '1', day: 'Monday', meal: 'Chicken and Rice' },
-  { id: '2', day: 'Tuesday', meal: 'Beef Stir Fry' },
-  { id: '3', day: 'Wednesday', meal: 'Vegetable Pasta' },
-  { id: '4', day: 'Thursday', meal: 'Fish and Chips' },
-  { id: '5', day: 'Friday', meal: 'Pizza' },
-  { id: '6', day: 'Saturday', meal: 'Salad' },
-  { id: '7', day: 'Sunday', meal: 'Soup' }
+  { id: '1', day: 'Monday', meals: { breakfast: 'Oatmeal', lunch: 'Chicken Salad', dinner: 'Chicken and Rice' } },
+  { id: '2', day: 'Tuesday', meals: { breakfast: 'Bagel', lunch: 'Beef Sandwich', dinner: 'Beef Stir Fry' } },
+  { id: '3', day: 'Wednesday', meals: { breakfast: 'Fruit Salad', lunch: 'Tomato Soup', dinner: 'Vegetable Pasta' } },
+  { id: '4', day: 'Thursday', meals: { breakfast: 'Pancakes', lunch: 'Fish Salad', dinner: 'Fish and Chips' } },
+  { id: '5', day: 'Friday', meals: { breakfast: 'Yogurt', lunch: 'Pizza Slice', dinner: 'Pizza' } },
+  { id: '6', day: 'Saturday', meals: { breakfast: 'Smoothie', lunch: 'Chicken Wrap', dinner: 'Salad' } },
+  { id: '7', day: 'Sunday', meals: { breakfast: 'French Toast', lunch: 'Grilled Cheese', dinner: 'Soup' } }
 ];
 
 const MealPlanScreen = () => {
+  const editMeal = (day, type, currentMeal) => {
+    Alert.prompt(
+      `Edit ${type}`,
+      `Current meal for ${day}: ${currentMeal}`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'OK', onPress: (newMeal) => updateMeal(day, type, newMeal) },
+      ],
+      'plain-text',
+      currentMeal
+    );
+  };
+
+  const updateMeal = (day, type, newMeal) => {
+    const mealIndex = meals.findIndex(meal => meal.day === day);
+    if (mealIndex !== -1) {
+      const updatedMeals = [...meals];
+      updatedMeals[mealIndex].meals[type] = newMeal;
+      console.log(updatedMeals); // In practice, you'd want to use a state to handle this update
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -20,7 +42,16 @@ const MealPlanScreen = () => {
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
             <Text style={styles.day}>{item.day}</Text>
-            <Text style={styles.meal}>{item.meal}</Text>
+            {Object.keys(item.meals).map((mealType) => (
+              <TouchableOpacity
+                key={mealType}
+                style={styles.mealItem}
+                onPress={() => editMeal(item.day, mealType, item.meals[mealType])}
+              >
+                <Text style={styles.mealType}>{mealType}: </Text>
+                <Text style={styles.meal}>{item.meals[mealType]}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
         )}
       />
@@ -45,6 +76,14 @@ const styles = StyleSheet.create({
   },
   meal: {
     fontSize: 16
+  },
+  mealItem: {
+    flexDirection: 'row',
+    paddingVertical: 5,
+  },
+  mealType: {
+    fontWeight: 'bold',
+    marginRight: 5,
   }
 });
 
