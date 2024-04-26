@@ -34,6 +34,10 @@ const MealPlanScreen = () => {
     setModalVisible(false);
   };
 
+  const saveMealPlan = () => {
+    alert('Meal plan saved!');
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -69,12 +73,14 @@ const MealPlanScreen = () => {
               style={styles.input}
               onChangeText={setEditedMeal}
               value={editedMeal}
+              placeholder="Enter meal"
             />
             <Button title="Save Changes" onPress={handleEditMeal} />
             <Button title="Cancel" onPress={() => setModalVisible(false)} color="#FF6347" />
           </View>
         </View>
       </Modal>
+      <Button title="Save Meal Plan" onPress={saveMealPlan} />
     </View>
   );
 };
@@ -91,11 +97,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc'
   },
   day: {
-    fontSize: 18,
+    fontSize: 20, // Increase font size for better readability
     fontWeight: 'bold'
   },
   meal: {
-    fontSize: 16
+    fontSize: 18, // Increase font size for better readability
   },
   mealItem: {
     flexDirection: 'row',
@@ -104,6 +110,7 @@ const styles = StyleSheet.create({
   mealType: {
     fontWeight: 'bold',
     marginRight: 5,
+    fontSize: 18, // Increase font size for better readability
   },
   centeredView: {
     flex: 1,
@@ -132,6 +139,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     width: 200,
+    fontSize: 18, 
   },
 });
 

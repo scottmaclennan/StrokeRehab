@@ -45,10 +45,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff', // Assuming the background is dark, white text for better contrast
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
+    color: 'black', 
     marginBottom: 20,
     textAlign: 'center'
   },  
