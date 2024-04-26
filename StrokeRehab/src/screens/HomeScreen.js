@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    justifyContent:'center'
   },  
   image: {
     flex: 1,
