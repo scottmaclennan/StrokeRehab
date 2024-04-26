@@ -2,18 +2,33 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Modal, TextInput, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Initial static data for meals throughout the week
+const initialMeals = [
+  { id: '1', day: 'Monday', meals: { breakfast: 'Oatmeal', lunch: 'Chicken Salad', dinner: 'Chicken and Rice' } },
+  { id: '2', day: 'Tuesday', meals: { breakfast: 'Bagel', lunch: 'Beef Sandwich', dinner: 'Beef Stir Fry' } },
+  { id: '3', day: 'Wednesday', meals: { breakfast: 'Fruit Salad', lunch: 'Tomato Soup', dinner: 'Vegetable Pasta' } },
+  { id: '4', day: 'Thursday', meals: { breakfast: 'Pancakes', lunch: 'Fish Salad', dinner: 'Fish and Chips' } },
+  { id: '5', day: 'Friday', meals: { breakfast: 'Yogurt', lunch: 'Pizza Slice', dinner: 'Pizza' } },
+  { id: '6', day: 'Saturday', meals: { breakfast: 'Smoothie', lunch: 'Chicken Wrap', dinner: 'Salad' } },
+  { id: '7', day: 'Sunday', meals: { breakfast: 'French Toast', lunch: 'Grilled Cheese', dinner: 'Soup' } }
+];
+
+// Main component for the Meal Plan Screen
 const MealPlanScreen = () => {
+  // State hooks for managing the meals, modal visibility, and current meal edits
   const [meals, setMeals] = useState(initialMeals);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentMeal, setCurrentMeal] = useState({});
   const [editedMeal, setEditedMeal] = useState('');
 
+  // Function to open modal and set current meal for editing
   const openEditModal = (day, type, meal) => {
     setCurrentMeal({ day, type, meal });
     setEditedMeal(meal);
     setModalVisible(true);
   };
 
+  // Function to handle meal editing and update the state
   const handleEditMeal = () => {
     const updatedMeals = meals.map(meal => {
       if (meal.day === currentMeal.day) {
@@ -25,7 +40,7 @@ const MealPlanScreen = () => {
     setModalVisible(false);
   };
 
-
+  // Function to save the updated meal plan
   const saveMealPlan = async () => {
     try {
       const response = await fetch('http://yourserver.com/saveMealPlan', {
@@ -42,26 +57,8 @@ const MealPlanScreen = () => {
       console.error('Error saving meal plan:', error);
     }
   };
-  
-  const loadMealPlan = async () => {
-    try {
-      const savedMeals = await AsyncStorage.getItem('meals');
-      if (savedMeals !== null) {
-        setMeals(JSON.parse(savedMeals));
-      }
-    } catch (error) {
-      alert('Failed to load the meal plan');
-      console.error('Error loading meal plan:', error);
-    }
-  };
-  
-  useEffect(() => {
-    loadMealPlan();
-    scheduleDailyReminder();
-  }, []);
-  
 
-
+  // Rendering the component UI
   return (
     <View style={styles.container}>
       <FlatList
@@ -107,6 +104,7 @@ const MealPlanScreen = () => {
   );
 };
 
+// Styling for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
