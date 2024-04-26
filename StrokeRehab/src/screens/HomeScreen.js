@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, Button, StyleSheet, ImageBackground, Platform } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -7,25 +7,32 @@ const HomeScreen = ({ navigation }) => {
       <ImageBackground 
         source={require('../assets/Images/StrokeRehab.jpeg')}
         style={styles.image}
+        accessible={true}
+        accessibilityLabel="Background image for Stroke Rehab app home screen"
       >
-      <Text style={styles.title}>Welcome to StrokeRehab</Text>
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Food Planner"
-          onPress={() => navigation.navigate('FoodPlanner')}
-        />
-        <Button
-          title="Medical Tracker"
-          onPress={() => navigation.navigate('MedicationPlanner')}
-        />
-        <Button
-          title="Exercise Planner"
-          onPress={() => navigation.navigate('ExercisePlanner')}
-        />
-      </View>
+        <Text style={styles.title} accessible={true} accessibilityRole="header">
+          Welcome to StrokeRehab
+        </Text>
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Food Planner"
+            onPress={() => navigation.navigate('FoodPlanner')}
+            accessibilityLabel="Navigate to the Food Planner"
+          />
+          <Button
+            title="Medical Tracker"
+            onPress={() => navigation.navigate('MedicationPlanner')}
+            accessibilityLabel="Navigate to the Medical Tracker"
+          />
+          <Button
+            title="Exercise Planner"
+            onPress={() => navigation.navigate('ExercisePlanner')}
+            accessibilityLabel="Navigate to the Exercise Planner"
+          />
+        </View>
       </ImageBackground>
-      </View>
-    );
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -38,8 +45,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#fff', // Assuming the background is dark, white text for better contrast
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
     marginBottom: 20,
-    justifyContent:'center'
+    textAlign: 'center'
   },  
   image: {
     flex: 1,

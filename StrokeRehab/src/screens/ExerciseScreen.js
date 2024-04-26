@@ -1,68 +1,98 @@
-import React, { useState, useRef } from 'react'; // Make sure useRef is imported
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Button, Alert } from 'react-native';
 
 // Initial data for exercises
 const initialExercises = [
-  { id: '1', title: 'Push-ups', description: 'Do 20 push-ups.', completed: false },
-  { id: '2', title: 'Sit-ups', description: 'Do 30 sit-ups.', completed: false },
-  { id: '3', title: 'Squats', description: 'Do 15 squats.', completed: false },
-  { id: '4', title: 'Plank', description: 'Hold a plank for 60 seconds.', completed: false }
+  { id: '1', title: 'Push-ups', description: 'Do 20 push-ups from the wall', seconds: 0, timerOn: false, intervalId: null },
+  { id: '2', title: 'Fast walking', description: 'Fast walk for 15 mins', seconds: 0, timerOn: false, intervalId: null },
 ];
 
 const ExerciseScreen = () => {
   const [exercises, setExercises] = useState(initialExercises);
-  const [seconds, setSeconds] = useState(0);
-  const timerRef = useRef(null);
+  const [newTitle, setNewTitle] = useState('');
+  const [newDescription, setNewDescription] = useState('');
 
-  const startTimer = () => {
-    timerRef.current = setInterval(() => {
-      setSeconds(prev => prev + 1);
-    }, 1000);
-  };
-
-  const stopTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
+  const addExercise = () => {
+    if (newTitle && newDescription) {
+      const newId = (Math.max(...exercises.map(ex => parseInt(ex.id))) + 1).toString(); // Ensure unique ID
+      const newExercise = { id: newId, title: newTitle, description: newDescription, seconds: 0, timerOn: false, intervalId: null };
+      setExercises([...exercises, newExercise]);
+      setNewTitle('');
+      setNewDescription('');
+    } else {
+      Alert.alert('Error', 'Both title and description must be filled out.');
     }
   };
 
-  const resetTimer = () => {
-    stopTimer();
-    setSeconds(0);
+  const startTimer = (id) => {
+    setExercises(exs => exs.map(ex => {
+      if (ex.id === id && !ex.timerOn) {
+        const intervalId = setInterval(() => {
+          setExercises(currentExs => currentExs.map(innerEx => {
+            if (innerEx.id === id) {
+              return { ...innerEx, seconds: innerEx.seconds + 1 };
+            }
+            return innerEx;
+          }));
+        }, 1000);
+        return { ...ex, timerOn: true, intervalId };
+      }
+      return ex;
+    }));
   };
 
-  const toggleComplete = (id) => {
-    const updatedExercises = exercises.map(exercise => {
-      if (exercise.id === id) {
-        return { ...exercise, completed: !exercise.completed };
+  const stopTimer = (id) => {
+    setExercises(exs => exs.map(ex => {
+      if (ex.id === id && ex.timerOn) {
+        clearInterval(ex.intervalId);
+        return { ...ex, timerOn: false, intervalId: null };
       }
-      return exercise;
-    });
-    setExercises(updatedExercises);
+      return ex;
+    }));
+  };
+
+  const resetTimer = (id) => {
+    stopTimer(id);
+    setExercises(exs => exs.map(ex => {
+      if (ex.id === id) {
+        return { ...ex, seconds: 0 };
+      }
+      return ex;
+    }));
   };
 
   return (
     <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        onChangeText={setNewTitle}
+        value={newTitle}
+        placeholder="New Exercise Title"
+      />
+      <TextInput
+        style={styles.input}
+        onChangeText={setNewDescription}
+        value={newDescription}
+        placeholder="New Exercise Description"
+      />
+      <Button title="Add Exercise" onPress={addExercise} />
+
       <FlatList
         data={exercises}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={[styles.itemContainer, item.completed ? styles.completed : null]}
-            onPress={() => toggleComplete(item.id)}
-          >
+          <View style={styles.itemContainer}>
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.description}>{item.description}</Text>
-          </TouchableOpacity>
+            <Text style={styles.timerText}>Timer: {item.seconds} Seconds</Text>
+            <View style={styles.buttonContainer}>
+              {!item.timerOn && <Button title="Start" onPress={() => startTimer(item.id)} />}
+              {item.timerOn && <Button title="Stop" onPress={() => stopTimer(item.id)} />}
+              <Button title="Reset" onPress={() => resetTimer(item.id)} />
+            </View>
+          </View>
         )}
       />
-      <View style={styles.timerContainer}>
-        <Text style={styles.timerText}>{`Timer: ${seconds} Seconds`}</Text>
-        <Button title="Start" onPress={startTimer} />
-        <Button title="Stop" onPress={stopTimer} />
-        <Button title="Reset" onPress={resetTimer} />
-      </View>
     </View>
   );
 };
@@ -71,14 +101,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 20,
+    paddingHorizontal: 10,
   },
   itemContainer: {
     padding: 20,
     marginVertical: 5,
     backgroundColor: '#f0f0f0',
   },
-  completed: {
-    backgroundColor: '#a0e0a0', // Light green background for completed items
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
   title: {
     fontSize: 18,
@@ -87,13 +122,14 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
   },
-  timerContainer: {
-    padding: 20,
-    alignItems: 'center',
-  },
   timerText: {
-    fontSize: 20,
-    marginBottom: 10,
+    fontSize: 16,
+    marginVertical: 5,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
   },
 });
 
