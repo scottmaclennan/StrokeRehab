@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ScrollView, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
-const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -89,41 +89,41 @@ export default function MedicationScreen() {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Medication name"
-          style={styles.input}
-          value={newMedication}
-          onChangeText={setNewMedication}
-        />
-        <TextInput
-          placeholder="Time (e.g., 8:00 AM)"
-          style={styles.input}
-          value={doseTime}
-          onChangeText={setDoseTime}
-        />
-        <TextInput
-          placeholder="Quantity (e.g., 2 pills)"
-          style={styles.input}
-          value={doseQuantity}
-          keyboardType="numeric"
-          onChangeText={setDoseQuantity}
-        />
-        <View style={styles.daysContainer}>
-          {daysOfWeek.map((day, index) => (
-            <TouchableOpacity
-              key={index}
-              style={selectedDays.includes(day) ? styles.dayButtonSelected : styles.dayButton}
-              onPress={() => toggleDay(day)}
-            >
-              <Text>{day.substring(0, 3)}</Text>
-            </TouchableOpacity>
-          ))}
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Medication name"
+            style={styles.input}
+            value={newMedication}
+            onChangeText={setNewMedication}
+          />
+          <TextInput
+            placeholder="Time (e.g., 8:00 AM)"
+            style={styles.input}
+            value={doseTime}
+            onChangeText={setDoseTime}
+          />
+          <TextInput
+            placeholder="Quantity (e.g., 2 pills)"
+            style={styles.input}
+            keyboardType="numeric"
+            value={doseQuantity}
+            onChangeText={setDoseQuantity}
+          />
+          <View style={styles.daysContainer}>
+            {daysOfWeek.map((day, index) => (
+              <TouchableOpacity
+                key={index}
+                style={selectedDays.includes(day) ? styles.dayButtonSelected : styles.dayButton}
+                onPress={() => toggleDay(day)}
+              >
+                <Text style={styles.dayText}>{day.substring(0, 3)}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Button title="Add Medication" onPress={addMedication} />
         </View>
-        <Button title="Add Medication" onPress={addMedication} />
-      </View>
-      <ScrollView style={styles.listContainer}>
         {medications.map((med, index) => (
           <View key={index} style={styles.listItem}>
             <Text style={styles.medText}>{med.name}</Text>
@@ -141,54 +141,67 @@ export default function MedicationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f4f4f8',
+  },
+  scrollView: {
+    width: '100%',
   },
   inputContainer: {
-    margin: 20
+    padding: 20,
   },
   input: {
-    height: 40,
-    borderColor: 'gray',
+    height: 50,
+    borderColor: '#ddd',
     borderWidth: 1,
     marginBottom: 10,
-    padding: 10,
-    width: 200
-  },
-  listContainer: {
-    flex: 1,
-    width: '100%'
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    fontSize: 16,
   },
   listItem: {
-    backgroundColor: 'lightgrey',
-    padding: 10,
-    marginVertical: 5
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 20,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1.5,
   },
   medText: {
-    fontSize: 18
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   doseText: {
-    fontSize: 14
+    fontSize: 16,
   },
   daysText: {
-    fontSize: 14
+    fontSize: 16,
+    color: '#666',
   },
   daysContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 10
+    marginBottom: 20,
   },
   dayButton: {
     padding: 10,
     backgroundColor: 'white',
-    borderColor: 'blue',
-    borderWidth: 1
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 20,
   },
   dayButtonSelected: {
     padding: 10,
-    backgroundColor: 'blue',
-    borderColor: 'blue',
-    borderWidth: 1
+    backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
+    borderWidth: 1,
+    borderRadius: 20,
+  },
+  dayText: {
+    color: '#333',
   }
 });
