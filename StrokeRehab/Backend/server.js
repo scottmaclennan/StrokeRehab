@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
 
 app.use(express.json());
@@ -26,7 +26,6 @@ app.get('/exercises', async (req, res) => {
     }
   });
   
-  // Node.js/Express
 app.post('/saveMealPlan', (req, res) => {
   const mealPlan = req.body;
   // Save mealPlan to your database
