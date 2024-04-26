@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
+// Initial set of exercises
 const initialExercises = [
   { id: '1', title: 'Push-ups', description: 'Do 20 push-ups from the wall', seconds: 0, timerOn: false, intervalId: null },
   { id: '2', title: 'Fast walking', description: 'Fast walk for 15 mins', seconds: 0, timerOn: false, intervalId: null },
 ];
 
+// Main component for the Exercise screen
 const ExerciseScreen = () => {
+  // State for managing exercises
   const [exercises, setExercises] = useState(initialExercises);
+  // State for handling new exercise title input
   const [newTitle, setNewTitle] = useState('');
+  // State for handling new exercise description input
   const [newDescription, setNewDescription] = useState('');
 
+  // Effect hook for fetching exercises and scheduling reminders on component mount
   useEffect(() => {
     fetchExercises();
     scheduleDailyReminder();
   }, []);
-
+  
+  // Function to fetch exercises from a local server
   const fetchExercises = async () => {
     try {
       const response = await fetch('http://localhost:3000/exercises');
@@ -28,6 +35,7 @@ const ExerciseScreen = () => {
     }
   };
 
+  // Function to schedule daily reminders using expo-notifications
   const scheduleDailyReminder = async () => {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -42,6 +50,7 @@ const ExerciseScreen = () => {
     });
   };
 
+  // Function to add a new exercise
   const addExercise = () => {
     if (newTitle && newDescription) {
       const newId = (Math.max(...exercises.map(ex => parseInt(ex.id, 10))) + 1).toString();
@@ -54,6 +63,7 @@ const ExerciseScreen = () => {
     }
   };
 
+  // Function to handle timer commands for exercises
   const handleTimer = (id, command) => {
     setExercises(exs => exs.map(ex => {
       if (ex.id === id) {
@@ -82,6 +92,7 @@ const ExerciseScreen = () => {
     }));
   };
 
+  // Rendering each exercise item in a list
   const renderExerciseItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Text style={styles.title}>{item.title}</Text>
@@ -98,6 +109,7 @@ const ExerciseScreen = () => {
     </View>
   );
 
+  // Main component return
   return (
     <View style={styles.container}>
       <TextInput
@@ -124,6 +136,7 @@ const ExerciseScreen = () => {
   );
 };
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
