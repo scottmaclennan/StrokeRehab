@@ -1,15 +1,16 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, Alert } from 'react-native';
 
-// Sample data for exercises
-const exercises = [
-  { id: '1', title: 'Push-ups', description: 'Do 20 push-ups.' },
-  { id: '2', title: 'Sit-ups', description: 'Do 30 sit-ups.' },
-  { id: '3', title: 'Squats', description: 'Do 15 squats.' },
-  { id: '4', title: 'Plank', description: 'Hold a plank for 60 seconds.' }
+// Initial data for exercises
+const initialExercises = [
+  { id: '1', title: 'Push-ups', description: 'Do 20 push-ups.', completed: false },
+  { id: '2', title: 'Sit-ups', description: 'Do 30 sit-ups.', completed: false },
+  { id: '3', title: 'Squats', description: 'Do 15 squats.', completed: false },
+  { id: '4', title: 'Plank', description: 'Hold a plank for 60 seconds.', completed: false }
 ];
 
 const ExerciseScreen = () => {
+  const [exercises, setExercises] = useState(initialExercises);
   const [seconds, setSeconds] = useState(0);
   const timerRef = useRef(null);
 
@@ -31,13 +32,26 @@ const ExerciseScreen = () => {
     setSeconds(0);
   };
 
+  const toggleComplete = (id) => {
+    const updatedExercises = exercises.map(exercise => {
+      if (exercise.id === id) {
+        return { ...exercise, completed: !exercise.completed };
+      }
+      return exercise;
+    });
+    setExercises(updatedExercises);
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={exercises}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.itemContainer}>
+          <TouchableOpacity
+            style={[styles.itemContainer, item.completed ? styles.completed : null]}
+            onPress={() => toggleComplete(item.id)}
+          >
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.description}>{item.description}</Text>
           </TouchableOpacity>
@@ -62,6 +76,9 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 5,
     backgroundColor: '#f0f0f0',
+  },
+  completed: {
+    backgroundColor: '#a0e0a0', // Light green background for completed items
   },
   title: {
     fontSize: 18,
