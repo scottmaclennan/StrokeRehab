@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, Alert } from 'react-native';
+import React, { useState, useRef } from 'react'; // Make sure useRef is imported
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button } from 'react-native';
 
 // Initial data for exercises
 const initialExercises = [
