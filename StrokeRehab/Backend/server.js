@@ -26,6 +26,13 @@ app.get('/exercises', async (req, res) => {
     }
   });
   
+  // Node.js/Express
+app.post('/saveMealPlan', (req, res) => {
+  const mealPlan = req.body;
+  // Save mealPlan to your database
+  res.send({ status: 'Meal plan saved!' });
+});
+
 
 // Start the server
 app.listen(PORT, () => {
