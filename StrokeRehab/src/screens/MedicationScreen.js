@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ScrollView, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
+// Static list of days of the week for selection in the UI
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+// Set up default handling for incoming notifications
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -12,21 +14,30 @@ Notifications.setNotificationHandler({
   }),
 });
 
+// Main functional component for managing medication schedules
 export default function MedicationScreen() {
+  // State for managing list of medications
   const [medications, setMedications] = useState([]);
+  // State for the new medication name input
   const [newMedication, setNewMedication] = useState('');
+  // State for the new medication dosage time input
   const [doseTime, setDoseTime] = useState('');
+  // State for the new medication dosage quantity input
   const [doseQuantity, setDoseQuantity] = useState('');
+  // State for tracking selected days of the week
   const [selectedDays, setSelectedDays] = useState([]);
 
+  // Effect hook to register for push notifications on component mount
   useEffect(() => {
     registerForPushNotificationsAsync();
   }, []);
 
+  // Toggles the selection of a day when setting up medication reminders
   const toggleDay = (day) => {
     setSelectedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
   };
 
+  // Adds a new medication entry to the list
   const addMedication = async () => {
     if (!newMedication || !doseTime || !doseQuantity || selectedDays.length === 0) {
       Alert.alert('Error', 'All fields must be filled out and at least one day must be selected.');
@@ -51,7 +62,6 @@ export default function MedicationScreen() {
       const jsonResponse = await response.json();
       alert(jsonResponse.message);
   
-      // Clear the form and state only if save was successful
       if (response.status === 200) {
         setMedications([...medications, newEntry]);
         setNewMedication('');
@@ -66,6 +76,7 @@ export default function MedicationScreen() {
     }
   };
 
+  // Registers the device for push notifications
   async function registerForPushNotificationsAsync() {
     let token;
     if (Device.isDevice) {
@@ -96,23 +107,7 @@ export default function MedicationScreen() {
     return token;
   }
 
-  async function scheduleNotification(medication) {
-    for (let dose of medication.doses) {
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: `Time to take your medication: ${medication.name}`,
-          body: `Take ${dose.quantity} at ${dose.time}`,
-          data: { data: 'goes here' },
-        },
-        trigger: {
-          hour: parseInt(dose.time.split(':')[0]),
-          minute: parseInt(dose.time.split(':')[1]),
-          repeats: true
-        },
-      });
-    }
-  }
-
+  // Main component rendering
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
       <ScrollView style={styles.scrollView}>
@@ -163,6 +158,7 @@ export default function MedicationScreen() {
   );
 }
 
+// Styles for the MedicationScreen component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
