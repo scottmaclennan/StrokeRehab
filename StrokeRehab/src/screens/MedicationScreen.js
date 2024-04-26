@@ -27,18 +27,43 @@ export default function MedicationScreen() {
     setSelectedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
   };
 
-  const addMedication = () => {
+  const addMedication = async () => {
+    if (!newMedication || !doseTime || !doseQuantity || selectedDays.length === 0) {
+      Alert.alert('Error', 'All fields must be filled out and at least one day must be selected.');
+      return;
+    }
+  
     const newEntry = {
       name: newMedication,
       doses: [{ time: doseTime, quantity: doseQuantity }],
       days: selectedDays
     };
-    setMedications([...medications, newEntry]);
-    scheduleNotification(newEntry);  // Schedule a notification
-    setNewMedication('');
-    setDoseTime('');
-    setDoseQuantity('');
-    setSelectedDays([]);
+  
+    try {
+      const response = await fetch('http://localhost:3000/medications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newEntry)
+      });
+  
+      const jsonResponse = await response.json();
+      alert(jsonResponse.message);
+  
+      // Clear the form and state only if save was successful
+      if (response.status === 200) {
+        setMedications([...medications, newEntry]);
+        setNewMedication('');
+        setDoseTime('');
+        setDoseQuantity('');
+        setSelectedDays([]);
+      }
+  
+    } catch (error) {
+      console.error('Failed to save the medication:', error);
+      Alert.alert('Error', 'Failed to save the medication');
+    }
   };
 
   async function registerForPushNotificationsAsync() {

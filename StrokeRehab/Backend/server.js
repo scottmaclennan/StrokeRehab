@@ -33,6 +33,14 @@ app.post('/saveMealPlan', (req, res) => {
   res.send({ status: 'Meal plan saved!' });
 });
 
+let medications = [];
+// Endpoint to receive medications
+app.post('/medications', (req, res) => {
+  const medication = req.body;
+  console.log('Adding new medication:', medication);
+  medications.push(medication);
+  res.status(200).send({ message: 'Medication added successfully!' });
+});
 
 // Start the server
 app.listen(PORT, () => {
