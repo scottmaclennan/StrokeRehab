@@ -2,7 +2,7 @@
 
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 5000;
+const port = 3000;
 
 
 app.use(express.json());
@@ -14,11 +14,22 @@ const exercises = [
 ];
 
 // API endpoint to get exercises
-app.get('/exercises', (req, res) => {
-  res.json(exercises);
-});
+app.get('/exercises', async (req, res) => {
+    try {
+      const client = await pool.connect();
+      const result = await client.query('SELECT * FROM exercises');
+      res.json(result.rows);
+      client.release();
+    } catch (error) {
+      console.error('Error fetching exercises:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+  
 
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
